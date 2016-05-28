@@ -64,9 +64,9 @@ void test_func(void *arg_ptr){
   89:	83 ec 08             	sub    $0x8,%esp
 //    printf(1,"\n n = %d\n",n);
     n++;
-  8c:	a1 90 0f 00 00       	mov    0xf90,%eax
+  8c:	a1 88 0f 00 00       	mov    0xf88,%eax
   91:	83 c0 01             	add    $0x1,%eax
-  94:	a3 90 0f 00 00       	mov    %eax,0xf90
+  94:	a3 88 0f 00 00       	mov    %eax,0xf88
    // printf(1,"after increase by 1 , n = %d\n\n",n);
     texit();
   99:	e8 84 03 00 00       	call   422 <texit>
@@ -84,8 +84,9 @@ void ping(void *arg_ptr){
     n = *num; 
   aa:	8b 45 f4             	mov    -0xc(%ebp),%eax
   ad:	8b 00                	mov    (%eax),%eax
-  af:	a3 90 0f 00 00       	mov    %eax,0xf90
-    printf(1,"Ping %d\n",*num);
+  af:	a3 88 0f 00 00       	mov    %eax,0xf88
+    while(1) {
+        printf(1,"Ping %d\n",*num);
   b4:	8b 45 f4             	mov    -0xc(%ebp),%eax
   b7:	8b 00                	mov    (%eax),%eax
   b9:	89 44 24 08          	mov    %eax,0x8(%esp)
@@ -93,13 +94,13 @@ void ping(void *arg_ptr){
   c4:	00 
   c5:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
   cc:	e8 51 04 00 00       	call   522 <printf>
-    thread_yield();
+        thread_yield();
   d1:	e8 64 03 00 00       	call   43a <thread_yield>
-}
-  d6:	c9                   	leave  
-  d7:	c3                   	ret    
+    }
+  d6:	eb dc                	jmp    b4 <ping+0x16>
 
 000000d8 <pong>:
+}
 void pong(void *arg_ptr){
   d8:	55                   	push   %ebp
   d9:	89 e5                	mov    %esp,%ebp
@@ -110,8 +111,9 @@ void pong(void *arg_ptr){
     n = *num; 
   e4:	8b 45 f4             	mov    -0xc(%ebp),%eax
   e7:	8b 00                	mov    (%eax),%eax
-  e9:	a3 90 0f 00 00       	mov    %eax,0xf90
-    printf(1,"Pong %d\n",*num);
+  e9:	a3 88 0f 00 00       	mov    %eax,0xf88
+    while(1) {
+        printf(1,"Pong %d\n",*num);
   ee:	8b 45 f4             	mov    -0xc(%ebp),%eax
   f1:	8b 00                	mov    (%eax),%eax
   f3:	89 44 24 08          	mov    %eax,0x8(%esp)
@@ -119,11 +121,10 @@ void pong(void *arg_ptr){
   fe:	00 
   ff:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
  106:	e8 17 04 00 00       	call   522 <printf>
-    thread_yield();
+        thread_yield();
  10b:	e8 2a 03 00 00       	call   43a <thread_yield>
-}
- 110:	c9                   	leave  
- 111:	c3                   	ret    
+    }
+ 110:	eb dc                	jmp    ee <pong+0x16>
 
 00000112 <stosb>:
                "cc");
@@ -760,7 +761,7 @@ printint(int fd, int xx, int base, int sgn)
  4b2:	ba 00 00 00 00       	mov    $0x0,%edx
  4b7:	f7 f3                	div    %ebx
  4b9:	89 d0                	mov    %edx,%eax
- 4bb:	0f b6 80 94 0f 00 00 	movzbl 0xf94(%eax),%eax
+ 4bb:	0f b6 80 8c 0f 00 00 	movzbl 0xf8c(%eax),%eax
  4c2:	88 44 0d dc          	mov    %al,-0x24(%ebp,%ecx,1)
   }while((x /= base) != 0);
  4c6:	8b 75 10             	mov    0x10(%ebp),%esi
@@ -1020,7 +1021,7 @@ free(void *ap)
  6de:	83 e8 08             	sub    $0x8,%eax
  6e1:	89 45 f8             	mov    %eax,-0x8(%ebp)
   for(p = freep; !(bp > p && bp < p->s.ptr); p = p->s.ptr)
- 6e4:	a1 b4 0f 00 00       	mov    0xfb4,%eax
+ 6e4:	a1 ac 0f 00 00       	mov    0xfac,%eax
  6e9:	89 45 fc             	mov    %eax,-0x4(%ebp)
  6ec:	eb 24                	jmp    712 <free+0x3d>
     if(p >= p->s.ptr && (bp > p || bp < p->s.ptr))
@@ -1114,7 +1115,7 @@ free(void *ap)
  7aa:	89 10                	mov    %edx,(%eax)
   freep = p;
  7ac:	8b 45 fc             	mov    -0x4(%ebp),%eax
- 7af:	a3 b4 0f 00 00       	mov    %eax,0xfb4
+ 7af:	a3 ac 0f 00 00       	mov    %eax,0xfac
 }
  7b4:	c9                   	leave  
  7b5:	c3                   	ret    
@@ -1160,7 +1161,7 @@ morecore(uint nu)
  7ff:	89 04 24             	mov    %eax,(%esp)
  802:	e8 ce fe ff ff       	call   6d5 <free>
   return freep;
- 807:	a1 b4 0f 00 00       	mov    0xfb4,%eax
+ 807:	a1 ac 0f 00 00       	mov    0xfac,%eax
 }
  80c:	c9                   	leave  
  80d:	c3                   	ret    
@@ -1183,18 +1184,18 @@ malloc(uint nbytes)
  81d:	83 c0 01             	add    $0x1,%eax
  820:	89 45 ec             	mov    %eax,-0x14(%ebp)
   if((prevp = freep) == 0){
- 823:	a1 b4 0f 00 00       	mov    0xfb4,%eax
+ 823:	a1 ac 0f 00 00       	mov    0xfac,%eax
  828:	89 45 f0             	mov    %eax,-0x10(%ebp)
  82b:	83 7d f0 00          	cmpl   $0x0,-0x10(%ebp)
  82f:	75 23                	jne    854 <malloc+0x46>
     base.s.ptr = freep = prevp = &base;
- 831:	c7 45 f0 ac 0f 00 00 	movl   $0xfac,-0x10(%ebp)
+ 831:	c7 45 f0 a4 0f 00 00 	movl   $0xfa4,-0x10(%ebp)
  838:	8b 45 f0             	mov    -0x10(%ebp),%eax
- 83b:	a3 b4 0f 00 00       	mov    %eax,0xfb4
- 840:	a1 b4 0f 00 00       	mov    0xfb4,%eax
- 845:	a3 ac 0f 00 00       	mov    %eax,0xfac
+ 83b:	a3 ac 0f 00 00       	mov    %eax,0xfac
+ 840:	a1 ac 0f 00 00       	mov    0xfac,%eax
+ 845:	a3 a4 0f 00 00       	mov    %eax,0xfa4
     base.s.size = 0;
- 84a:	c7 05 b0 0f 00 00 00 	movl   $0x0,0xfb0
+ 84a:	c7 05 a8 0f 00 00 00 	movl   $0x0,0xfa8
  851:	00 00 00 
   }
   for(p = prevp->s.ptr; ; prevp = p, p = p->s.ptr){
@@ -1237,14 +1238,14 @@ malloc(uint nbytes)
       }
       freep = prevp;
  8a4:	8b 45 f0             	mov    -0x10(%ebp),%eax
- 8a7:	a3 b4 0f 00 00       	mov    %eax,0xfb4
+ 8a7:	a3 ac 0f 00 00       	mov    %eax,0xfac
       return (void*)(p + 1);
  8ac:	8b 45 f4             	mov    -0xc(%ebp),%eax
  8af:	83 c0 08             	add    $0x8,%eax
  8b2:	eb 38                	jmp    8ec <malloc+0xde>
     }
     if(p == freep)
- 8b4:	a1 b4 0f 00 00       	mov    0xfb4,%eax
+ 8b4:	a1 ac 0f 00 00       	mov    0xfac,%eax
  8b9:	39 45 f4             	cmp    %eax,-0xc(%ebp)
  8bc:	75 1b                	jne    8d9 <malloc+0xcb>
       if((p = morecore(nunits)) == 0)
@@ -1457,12 +1458,12 @@ int random(int max){
  a1e:	55                   	push   %ebp
  a1f:	89 e5                	mov    %esp,%ebp
     rands = rands * 1664525 + 1013904233;
- a21:	a1 a8 0f 00 00       	mov    0xfa8,%eax
+ a21:	a1 a0 0f 00 00       	mov    0xfa0,%eax
  a26:	69 c0 0d 66 19 00    	imul   $0x19660d,%eax,%eax
  a2c:	05 69 f3 6e 3c       	add    $0x3c6ef369,%eax
- a31:	a3 a8 0f 00 00       	mov    %eax,0xfa8
+ a31:	a3 a0 0f 00 00       	mov    %eax,0xfa0
     return (int)(rands % max);
- a36:	a1 a8 0f 00 00       	mov    0xfa8,%eax
+ a36:	a1 a0 0f 00 00       	mov    0xfa0,%eax
  a3b:	8b 4d 08             	mov    0x8(%ebp),%ecx
  a3e:	ba 00 00 00 00       	mov    $0x0,%edx
  a43:	f7 f1                	div    %ecx

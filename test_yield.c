@@ -32,12 +32,16 @@ void test_func(void *arg_ptr){
 void ping(void *arg_ptr){
     int * num = (int *)arg_ptr;
     n = *num; 
-    printf(1,"Ping %d\n",*num);
-    thread_yield();
+    while(1) {
+        printf(1,"Ping %d\n",*num);
+        thread_yield();
+    }
 }
 void pong(void *arg_ptr){
     int * num = (int *)arg_ptr;
     n = *num; 
-    printf(1,"Pong %d\n",*num);
-    thread_yield();
+    while(1) {
+        printf(1,"Pong %d\n",*num);
+        thread_yield();
+    }
 }

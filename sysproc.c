@@ -132,6 +132,9 @@ sys_twakeup(void)
 int
 sys_thread_yield(void)
 {
-  yield();
+  cprintf("Yielded\n");
+  //yield();
+  thread_yield();
+  
   return 0;
 }
