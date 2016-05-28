@@ -654,6 +654,7 @@ struct queue2{
     struct node2 * head;
     struct node2 * tail;
 };
+struct queue2 *thQ;
 void init_q2(struct queue2 *q){
     q->size = 0;
     q->head = 0;
@@ -694,51 +695,64 @@ struct proc* pop_q2(struct queue2 *q){
     }
     return 0;
 }
+//////////////////////////////////
+
+//////////////////////////////////
 void thread_yield(void){
     
-    static struct queue2 *thQ;
+    //acquire(&ptable.lock);
     struct proc *p;
     struct proc *old;
     //struct proc *curr;
     int pid = proc->pid;
     static int acq = 0;
-    cprintf("ACQ: %d", acq);
+    cprintf("ACQ: %d\n", acq);
     if (acq == 0) {
         init_q2(thQ);
         //acquire(&ptable.lock); 
+        //cprintf(" ACQUIRED\n");
         acq++;
     }
+    //else cprintf(" DID NOT ACQUIRE\n");
+    
     if (!holding(&ptable.lock)) {
         acquire(&ptable.lock); 
         cprintf(" ACQUIRED\n");
     }
+    else cprintf(" DID NOT ACQUIRE\n");
+    
     cprintf("Curr %d%d%d\n", proc->isthread, proc->state, proc->pid);
     if(empty_q2(thQ)) {
         for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
             cprintf(" %d%d%d", p->isthread, p->state, p->pid);
             if ((p->state == RUNNABLE) && (p->isthread == 1)) {
                 add_q2(thQ, p);
+                cprintf("\nPUSHED NEW\n");
                 break;
             }
         }
     }
     p = pop_q2(thQ);
-    cprintf("\nBefore %d %d %d %d\n%d\n",pid, p->isthread, p->state, p->pid,p);
+    cprintf("Before %d %d %d %d\n%d\n",pid, p->isthread, p->state, p->pid,p);
     proc->state = RUNNABLE;
     old = proc;
     add_q2(thQ, old);
     p->state = RUNNING;
     proc = p;
-    cprintf("HERE?\n");
+    cprintf("HERE?\n\n");
     swtch(&old->context, proc->context);
+    //proc = 0;
     //swtch(&old->context, p->context);
     //swtch(&old->context, cpu->scheduler);
-    swtch(&cpu->scheduler, proc->context);
+    //swtch(&cpu->scheduler, proc->context);
     cprintf("After %d\n", pid);
+    
     if (holding(&ptable.lock)) {
         release(&ptable.lock); 
         cprintf("RELEASED\n");
     }
+    else cprintf("DID NOT RELEASE\n");
+    
     //release(&ptable.lock);
     
 }
