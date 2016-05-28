@@ -63,7 +63,9 @@ void            ioapicinit(void);
 
 // kalloc.c
 char*           kalloc(void);
+void*           kalloc2(void);
 void            kfree(char*);
+void            kfree2(void*);
 void            kinit1(void*, void*);
 void            kinit2(void*, void*);
 
@@ -183,3 +185,26 @@ void            clearpteu(pde_t *pgdir, char *uva);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
+
+/*
+struct node{
+    int value;
+    struct node *next;
+};
+
+struct queue{
+    int size;
+    struct node * head;
+    struct node * tail;
+};
+
+// queue library
+// queue.c
+void init_q(struct queue *);
+void add_q(struct queue *, int);
+int empty_q(struct queue *);
+int pop_q(struct queue *);
+*/
+
+
+

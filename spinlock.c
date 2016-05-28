@@ -8,7 +8,7 @@
 #include "mmu.h"
 #include "proc.h"
 #include "spinlock.h"
-#include "semaphore.h"
+//#include "semaphore.h"
 
 void
 initlock(struct spinlock *lk, char *name)
@@ -27,7 +27,7 @@ acquire(struct spinlock *lk)
 {
   pushcli(); // disable interrupts to avoid deadlock.
   if(holding(lk))
-    panic("acquire");
+    panic("acquire in spinlock.c");
 
   // The xchg is atomic.
   // It also serializes, so that reads after acquire are not
@@ -45,7 +45,7 @@ void
 release(struct spinlock *lk)
 {
   if(!holding(lk))
-    panic("release");
+    panic("release in spinlock.c");
 
   lk->pcs[0] = 0;
   lk->cpu = 0;

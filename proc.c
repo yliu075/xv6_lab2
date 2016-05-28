@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "queue.h"
 
 struct {
     struct spinlock lock;
@@ -642,10 +643,102 @@ void tsleep(void){
 
 }
 
-////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+struct node2{
+    struct proc *value;
+    struct node2 *next;
+};
 
+struct queue2{
+    int size;
+    struct node2 * head;
+    struct node2 * tail;
+};
+void init_q2(struct queue2 *q){
+    q->size = 0;
+    q->head = 0;
+    q->tail = 0;
+}
+void add_q2(struct queue2 *q, struct proc *v){
+    struct node2 * n = kalloc2();
+    n->next = 0;
+    n->value = v;
+    if(q->head == 0){
+        q->head = n;
+    }else{
+        q->tail->next = n;
+    }
+    q->tail = n;
+    q->size++;
+}
+int empty_q2(struct queue2 *q){
+    if(q->size == 0)
+        return 1;
+    else
+        return 0;
+} 
+struct proc* pop_q2(struct queue2 *q){
+    struct proc *val;
+    struct node2 *destroy;
+    if(!empty_q2(q)){
+       val = q->head->value; 
+       destroy = q->head;
+       q->head = q->head->next;
+       kfree2(destroy);
+       q->size--;
+       if(q->size == 0){
+            q->head = 0;
+            q->tail = 0;
+       }
+       return val;
+    }
+    return 0;
+}
 void thread_yield(void){
     
-    return;
-
+    static struct queue2 *thQ;
+    struct proc *p;
+    struct proc *old;
+    //struct proc *curr;
+    int pid = proc->pid;
+    static int acq = 0;
+    cprintf("ACQ: %d", acq);
+    if (acq == 0) {
+        init_q2(thQ);
+        //acquire(&ptable.lock); 
+        acq++;
+    }
+    if (!holding(&ptable.lock)) {
+        acquire(&ptable.lock); 
+        cprintf(" ACQUIRED\n");
+    }
+    cprintf("Curr %d%d%d\n", proc->isthread, proc->state, proc->pid);
+    if(empty_q2(thQ)) {
+        for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+            cprintf(" %d%d%d", p->isthread, p->state, p->pid);
+            if ((p->state == RUNNABLE) && (p->isthread == 1)) {
+                add_q2(thQ, p);
+                break;
+            }
+        }
+    }
+    p = pop_q2(thQ);
+    cprintf("\nBefore %d %d %d %d\n%d\n",pid, p->isthread, p->state, p->pid,p);
+    proc->state = RUNNABLE;
+    old = proc;
+    add_q2(thQ, old);
+    p->state = RUNNING;
+    proc = p;
+    cprintf("HERE?\n");
+    swtch(&old->context, proc->context);
+    //swtch(&old->context, p->context);
+    //swtch(&old->context, cpu->scheduler);
+    swtch(&cpu->scheduler, proc->context);
+    cprintf("After %d\n", pid);
+    if (holding(&ptable.lock)) {
+        release(&ptable.lock); 
+        cprintf("RELEASED\n");
+    }
+    //release(&ptable.lock);
+    
 }

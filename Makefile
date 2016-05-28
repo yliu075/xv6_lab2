@@ -27,7 +27,9 @@ OBJS = \
 	uart.o\
 	vectors.o\
 	vm.o\
-	#semaphore.o\
+	#queue.o\
+	#umalloc.o\
+	#ulib.o\
 	
 # Cross-compiling (e.g., on Mac OS X)
 #TOOLPREFIX = i386-jos-elf-
@@ -178,18 +180,19 @@ UPROGS=\
 	_wc\
 	_zombie\
 	_test_yield\
+	_ty\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
 
 -include *.d
 
-clean: 
-	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
-	*.o *.d *.asm *.sym vectors.S bootblock entryother \
-	initcode initcode.out kernel xv6.img fs.img kernelmemfs mkfs \
-	.gdbinit \
-	$(UPROGS)
+#clean: 
+	#rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
+	#*.o *.d *.asm *.sym vectors.S bootblock entryother \
+	#initcode initcode.out kernel xv6.img fs.img kernelmemfs mkfs \
+	#.gdbinit \
+	#$(UPROGS)
 
 # make a printout
 FILES = $(shell grep -v '^\#' runoff.list)
@@ -248,7 +251,7 @@ EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
 	printf.c umalloc.c test1.c test.c test_sleep.c frisbee.c\
-	test_q.c test_random.c teset_yield.c\
+	test_q.c test_random.c teset_yield.c ty.c queue.c umalloc.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 

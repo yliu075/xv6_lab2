@@ -1515,6 +1515,7 @@ int random(int max){
 #include "types.h"
 #include "user.h"
 
+
 void init_q(struct queue *q){
  aea:	55                   	push   %ebp
  aeb:	89 e5                	mov    %esp,%ebp
