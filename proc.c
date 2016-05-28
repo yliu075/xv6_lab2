@@ -735,10 +735,11 @@ void thread_yield(void){
     p = pop_q2(thQ);
     cprintf("Before %d %d %d %d\n%d\n",pid, p->isthread, p->state, p->pid,p);
     proc->state = RUNNABLE;
+    add_q2(thQ, proc);
     old = proc;
-    add_q2(thQ, old);
-    p->state = RUNNING;
     proc = p;
+    proc->state = RUNNING;
+    
     cprintf("HERE?\n\n");
     swtch(&old->context, proc->context);
     //proc = 0;
