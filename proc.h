@@ -77,3 +77,14 @@ struct proc {
 //   fixed-size stack
 //   expandable heap
 
+struct node2{
+    struct proc *value;
+    struct node2 *next;
+};
+
+struct queue2{
+    int size;
+    struct node2 * head;
+    struct node2 * tail;
+};
+struct queue2 *thQ;

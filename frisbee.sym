@@ -48,6 +48,7 @@
 0000068a write
 000006c2 fstat
 0000069a kill
+00001594 thQ
 000006da chdir
 000006a2 exec
 00000672 wait
@@ -69,7 +70,7 @@
 0000023d pass_next
 0000058a stat
 0000134c _edata
-00001594 _end
+00001598 _end
 00000d5b add_q
 000006ca link
 0000066a exit

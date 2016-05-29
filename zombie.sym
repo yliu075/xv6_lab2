@@ -43,6 +43,7 @@
 000002ab write
 000002e3 fstat
 000002bb kill
+00000e4c thQ
 000002fb chdir
 000002c3 exec
 00000293 wait
@@ -63,7 +64,7 @@
 0000034b thread_yield
 000001ab stat
 00000e40 _edata
-00000e4c _end
+00000e50 _end
 0000097c add_q
 000002eb link
 0000028b exit

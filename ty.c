@@ -10,13 +10,15 @@ void pong(void *arg_ptr);
 int main(int argc, char *argv[]){
    int arg = 10;
    void *tid = thread_create(ping, (void *)&arg);
+   printf(1,"Thread Created 1\n");
    if(tid <= 0){
-       printf(1,"wrong happen");
+       printf(1,"wrong happen\n");
        exit();
    } 
    tid = thread_create(pong, (void *)&arg);
+   printf(1,"Thread Created 2\n");
    if(tid <= 0){
-       printf(1,"wrong happen");
+       printf(1,"wrong happen\n");
        exit();
    } 
    exit();
@@ -35,7 +37,7 @@ void ping(void *arg_ptr){
     int i = 0;
     for (; i < 10 ; i++) {
     // while(1) {
-        printf(1,"Ping %d %d \n",*num, i);
+        printf(1,"\nPing %d %d \n",*num, i);
         thread_yield();
         printf(1,"Pinged\n");
     }
@@ -46,7 +48,7 @@ void pong(void *arg_ptr){
     int i = 0;
     for (; i < 10 ; i++) {
     // while(1) {
-        printf(1,"Pong %d %d \n",*num, i);
+        printf(1,"\nPong %d %d \n",*num, i);
         thread_yield();
         printf(1,"Ponged\n");
     }

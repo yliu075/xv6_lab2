@@ -122,6 +122,7 @@ void            tsleep(void);
 void            yield(void);
 int             clone(int stack, int size,int routine,int arg);
 void            texit(void);
+
 void            thread_yield(void);
 // swtch.S
 void            swtch(struct context**, struct context*);

@@ -44,6 +44,7 @@
 0000046c write
 000004a4 fstat
 0000047c kill
+000011e8 thQ
 000004bc chdir
 00000484 exec
 00000454 wait
@@ -65,7 +66,7 @@
 00000169 func
 0000036c stat
 000010b0 _edata
-000011e8 _end
+000011ec _end
 00000b3d add_q
 000004ac link
 0000044c exit

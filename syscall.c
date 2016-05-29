@@ -104,6 +104,7 @@ extern int sys_tsleep(void);
 extern int sys_twakeup(void);
 extern int sys_thread_yield(void);
 
+
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
 [SYS_exit]    sys_exit,

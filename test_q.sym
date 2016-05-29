@@ -43,6 +43,7 @@
 00000312 write
 0000034a fstat
 00000322 kill
+00000ebc thQ
 00000362 chdir
 0000032a exec
 000002fa wait
@@ -63,7 +64,7 @@
 000003b2 thread_yield
 00000212 stat
 00000eb0 _edata
-00000ebc _end
+00000ec0 _end
 000009e3 add_q
 00000352 link
 000002f2 exit

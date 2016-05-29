@@ -55,6 +55,7 @@
 00000f81 write
 00000fb9 fstat
 00000f91 kill
+00001ed0 thQ
 00000fd1 chdir
 0000077e parseline
 00000000 runcmd
@@ -83,7 +84,7 @@
 00001021 thread_yield
 00000e81 stat
 00001e50 _edata
-00001ed0 _end
+00001ed4 _end
 00001652 add_q
 00000fc1 link
 00000f61 exit

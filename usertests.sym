@@ -63,6 +63,7 @@
 00003c48 kill
 0000336b validatetest
 000028a7 rmdot
+0000aaa4 thQ
 00003c88 chdir
 0000065d exectest
 00003c50 exec
@@ -98,7 +99,7 @@
 00003b38 stat
 00002526 bigfile
 000062e0 _edata
-0000aaa4 _end
+0000aaa8 _end
 00004309 add_q
 0000126c unlinkread
 00003c78 link

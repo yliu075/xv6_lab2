@@ -6,7 +6,8 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
-#include "queue.h"
+//#include "queue.h"
+//#include "user.h"
 
 struct {
     struct spinlock lock;
@@ -184,6 +185,53 @@ fork(void)
 
 }
 
+
+//////////////////////////////////////////////////////////////////////
+uint initedQ = 0;
+void init_q2(struct queue2 *q){
+    q->size = 0;
+    q->head = 0;
+    q->tail = 0;
+}
+void add_q2(struct queue2 *q, struct proc *v){
+    //struct node2 * n = kalloc2();
+    struct node2 * n = kalloc2();
+    n->next = 0;
+    n->value = v;
+    if(q->head == 0){
+        q->head = n;
+    }else{
+        q->tail->next = n;
+    }
+    q->tail = n;
+    q->size++;
+}
+int empty_q2(struct queue2 *q){
+    if(q->size == 0)
+        return 1;
+    else
+        return 0;
+} 
+struct proc* pop_q2(struct queue2 *q){
+    struct proc *val;
+    struct node2 *destroy;
+    if(!empty_q2(q)){
+       val = q->head->value; 
+       destroy = q->head;
+       q->head = q->head->next;
+       kfree2(destroy);
+       q->size--;
+       if(q->size == 0){
+            q->head = 0;
+            q->tail = 0;
+       }
+       return val;
+    }
+    return 0;
+}
+/////////////////////////////////////////////////////////////////////////
+
+
 //creat a new process but used parent pgdir. 
 int clone(int stack, int size, int routine, int arg){ 
     int i, pid;
@@ -258,7 +306,11 @@ int clone(int stack, int size, int routine, int arg){
 //        cprintf("ustack[%d] is %d\n",cnt,ustack[cnt]);
 //    }
 //
-
+    if (!initedQ) {
+        init_q2(thQ);
+        initedQ++;
+    }
+    add_q2(thQ, np);
 
 //modify here <<<<<
 
@@ -279,6 +331,11 @@ int clone(int stack, int size, int routine, int arg){
 
      acquire(&ptable.lock);
     np->state = RUNNABLE;
+    // if (!initedQ) {
+    //     init_q2(thQ);
+    //     initedQ ++;
+    // }
+    // add_q2(thQ, np);
      release(&ptable.lock);
     safestrcpy(np->name, proc->name, sizeof(proc->name));
 
@@ -644,84 +701,59 @@ void tsleep(void){
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-struct node2{
-    struct proc *value;
-    struct node2 *next;
-};
+// struct node2{
+//     struct proc *value;
+//     struct node2 *next;
+// };
 
-struct queue2{
-    int size;
-    struct node2 * head;
-    struct node2 * tail;
-};
-struct queue2 *thQ;
-void init_q2(struct queue2 *q){
-    q->size = 0;
-    q->head = 0;
-    q->tail = 0;
+// struct queue2{
+//     int size;
+//     struct node2 * head;
+//     struct node2 * tail;
+// };
+// struct queue2 *thQ;
+
+
+void lock_acquire2(struct spinlock *lock){
+    while(xchg(&lock->locked,1) != 0);
 }
-void add_q2(struct queue2 *q, struct proc *v){
-    struct node2 * n = kalloc2();
-    n->next = 0;
-    n->value = v;
-    if(q->head == 0){
-        q->head = n;
-    }else{
-        q->tail->next = n;
-    }
-    q->tail = n;
-    q->size++;
-}
-int empty_q2(struct queue2 *q){
-    if(q->size == 0)
-        return 1;
-    else
-        return 0;
-} 
-struct proc* pop_q2(struct queue2 *q){
-    struct proc *val;
-    struct node2 *destroy;
-    if(!empty_q2(q)){
-       val = q->head->value; 
-       destroy = q->head;
-       q->head = q->head->next;
-       kfree2(destroy);
-       q->size--;
-       if(q->size == 0){
-            q->head = 0;
-            q->tail = 0;
-       }
-       return val;
-    }
-    return 0;
+void lock_release2(struct spinlock *lock){
+    xchg(&lock->locked,0);
 }
 //////////////////////////////////
 
 //////////////////////////////////
 void thread_yield(void){
-    
+    cprintf("Curr %d%d%d\n", proc->isthread, proc->state, proc->pid);
     //acquire(&ptable.lock);
     struct proc *p;
     struct proc *old;
     //struct proc *curr;
     int pid = proc->pid;
-    static int acq = 0;
-    cprintf("ACQ: %d\n", acq);
-    if (acq == 0) {
+    int intena;
+    if (!initedQ) {
         init_q2(thQ);
-        //acquire(&ptable.lock); 
-        //cprintf(" ACQUIRED\n");
-        acq++;
+        initedQ ++;
     }
+    // static int acq = 0;
+    // cprintf("ACQ: %d\n", acq);
+    // if (acq == 0) {
+    //     init_q2(thQ);
+    //     //acquire(&ptable.lock); 
+    //     //cprintf(" ACQUIRED\n");
+    //     acq++;
+    // }
     //else cprintf(" DID NOT ACQUIRE\n");
     
     if (!holding(&ptable.lock)) {
+        //lock_acquire2(&ptable.lock);
         acquire(&ptable.lock); 
         cprintf(" ACQUIRED\n");
     }
     else cprintf(" DID NOT ACQUIRE\n");
+    cprintf("QUEUE SIZE_1 %d\n", thQ->size);
     
-    cprintf("Curr %d%d%d\n", proc->isthread, proc->state, proc->pid);
+    /*
     if(empty_q2(thQ)) {
         for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
             cprintf(" %d%d%d", p->isthread, p->state, p->pid);
@@ -732,16 +764,23 @@ void thread_yield(void){
             }
         }
     }
+    */
     p = pop_q2(thQ);
-    cprintf("Before %d %d %d %d\n%d\n",pid, p->isthread, p->state, p->pid,p);
+    if ((p->pid) == (proc->pid)) {
+        p = pop_q2(thQ);
+    }
+    cprintf("Before %d going to %d%d%d\n",pid, p->isthread, p->state, p->pid);
+    cprintf("QUEUE SIZE_2 %d\n", thQ->size);
     proc->state = RUNNABLE;
     add_q2(thQ, proc);
     old = proc;
     proc = p;
-    proc->state = RUNNING;
-    
-    cprintf("HERE?\n\n");
+    //switchuvm(p);
+    p->state = RUNNING;
+    intena = cpu->intena;
     swtch(&old->context, proc->context);
+    cpu->intena = intena;
+    //switchkvm();
     //proc = 0;
     //swtch(&old->context, p->context);
     //swtch(&old->context, cpu->scheduler);
@@ -749,6 +788,7 @@ void thread_yield(void){
     cprintf("After %d\n", pid);
     
     if (holding(&ptable.lock)) {
+        //lock_release2(&ptable.lock);
         release(&ptable.lock); 
         cprintf("RELEASED\n");
     }

@@ -26,8 +26,10 @@ void
 acquire(struct spinlock *lk)
 {
   pushcli(); // disable interrupts to avoid deadlock.
-  if(holding(lk))
+  if(holding(lk)) {
+    cprintf("PROC %d%d%d %s called acq ", proc->isthread, proc->state, proc->pid, proc->name);
     panic("acquire in spinlock.c");
+  }
 
   // The xchg is atomic.
   // It also serializes, so that reads after acquire are not
@@ -44,8 +46,10 @@ acquire(struct spinlock *lk)
 void
 release(struct spinlock *lk)
 {
-  if(!holding(lk))
+  if(!holding(lk)) {
+    cprintf("PROC %d%d%d %s called rel ", proc->isthread, proc->state, proc->pid, proc->name);
     panic("release in spinlock.c");
+  }
 
   lk->pcs[0] = 0;
   lk->cpu = 0;
