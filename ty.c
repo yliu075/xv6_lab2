@@ -38,7 +38,7 @@ void ping(void *arg_ptr){
     for (; i < 10 ; i++) {
     // while(1) {
         printf(1,"\nPing %d %d \n",*num, i);
-        thread_yield();
+        thread_yield2();
         printf(1,"Pinged\n");
     }
 }
@@ -49,7 +49,7 @@ void pong(void *arg_ptr){
     for (; i < 10 ; i++) {
     // while(1) {
         printf(1,"\nPong %d %d \n",*num, i);
-        thread_yield();
+        thread_yield2();
         printf(1,"Ponged\n");
     }
 }

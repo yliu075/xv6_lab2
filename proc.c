@@ -6,7 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
-//#include "queue.h"
+#include "queue.h"
 //#include "user.h"
 
 struct {
@@ -306,12 +306,13 @@ int clone(int stack, int size, int routine, int arg){
 //        cprintf("ustack[%d] is %d\n",cnt,ustack[cnt]);
 //    }
 //
+    /*
     if (!initedQ) {
         init_q2(thQ);
         initedQ++;
     }
     add_q2(thQ, np);
-
+    */
 //modify here <<<<<
 
     np->tf->ebp = sp;
@@ -796,4 +797,29 @@ void thread_yield(void){
     
     //release(&ptable.lock);
     
+}
+
+void thread_yield3(int tid) {
+    /*
+    acquire(&ptable.lock);
+    struct proc *p;
+    struct proc *old;
+    cprintf("Finding TID: %d", tid);
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        cprintf(" %d%d%d", p->isthread, p->state, p->pid);
+        if ((p->state == RUNNABLE) && (p->isthread == 1) && (p->pid == tid)) {
+            //add_q2(thQ, p);
+            cprintf("\nFound\n");
+            break;
+        }
+    }
+    proc->state = RUNNABLE;
+    old = proc;
+    proc = p;
+    //switchuvm(p);
+    p->state = RUNNING;
+    swtch(&old->context, proc->context);
+    release(&ptable.lock);
+    */
+    yield();
 }

@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "x86.h"
 #include "proc.h"
+#include "queue.h"
 
 unsigned long rands = 1;
 
@@ -18,13 +19,18 @@ void lock_release(lock_t *lock){
     xchg(&lock->locked,0);
 }
 
+struct queue *thQ2;
+unsigned char inQ = 0;
 
 void *thread_create(void(*start_routine)(void*), void *arg){
     int tid;
     void * stack = malloc(2 * 4096);
     void *garbage_stack = stack; 
    // printf(1,"start routine addr : %d\n",(uint)start_routine);
-
+    if (inQ == 0) {
+        init_q(thQ2);
+        inQ++;
+    }
 
     if((uint)stack % 4096){
         stack = stack + (4096 - (uint)stack % 4096);
@@ -42,6 +48,7 @@ void *thread_create(void(*start_routine)(void*), void *arg){
     }
     if(tid > 0){
         //store threads on thread table
+        add_q(thQ2, tid);
         return garbage_stack;
     }
     if(tid == 0){
@@ -57,4 +64,19 @@ void *thread_create(void(*start_routine)(void*), void *arg){
 int random(int max){
     rands = rands * 1664525 + 1013904233;
     return (int)(rands % max);
+}
+
+////////////////////////////////////////////////////////
+void thread_yield2(){
+    int tid2 = proc->pid;
+    printf(1,"thQ2 Size1 %d PID: %d \n", thQ2->size, tid2);
+    add_q(thQ2, tid2);
+    printf(1,"thQ2 Size2 %d \n", thQ2->size);
+    int tidNext = pop_q(thQ2);
+    while (tid2 == tidNext) tidNext = pop_q(thQ2);
+    printf(1,"thQ2 Size3 %d TID: %d \n", thQ2->size, tidNext);
+    tsleep();
+    twakeup(tidNext);
+    thread_yield3(tidNext);
+    //yield();
 }

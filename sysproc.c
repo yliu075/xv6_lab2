@@ -138,3 +138,14 @@ sys_thread_yield(void)
   cprintf("Yielded_2\n");
   return 0;
 }
+
+int
+sys_thread_yield3(void)
+{
+  int tid;
+    if(argint(0,&tid) < 0){
+        return -1;
+    }
+  thread_yield3(tid);
+  return 0;
+}

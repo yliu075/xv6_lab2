@@ -124,6 +124,8 @@ int             clone(int stack, int size,int routine,int arg);
 void            texit(void);
 
 void            thread_yield(void);
+void            thread_yield3(int);
+
 // swtch.S
 void            swtch(struct context**, struct context*);
 

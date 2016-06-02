@@ -103,6 +103,7 @@ extern int sys_texit(void);
 extern int sys_tsleep(void);
 extern int sys_twakeup(void);
 extern int sys_thread_yield(void);
+extern int sys_thread_yield3(void);
 
 
 static int (*syscalls[])(void) = {
@@ -132,6 +133,7 @@ static int (*syscalls[])(void) = {
 [SYS_tsleep]   sys_tsleep,
 [SYS_twakeup]   sys_twakeup,
 [SYS_thread_yield] sys_thread_yield,
+[SYS_thread_yield3] sys_thread_yield3,
 };
 
 void
