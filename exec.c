@@ -10,6 +10,7 @@
 int
 exec(char *path, char **argv)
 {
+  cprintf("exec starting\n");
   char *s, *last;
   int i, off;
   uint argc, sz, sp, ustack[3+MAXARG+1];
@@ -34,6 +35,10 @@ exec(char *path, char **argv)
 
   // Load program into memory.
   sz = 0;
+  if((sz = allocuvm(pgdir,sz,PGSIZE)) == 0) {
+    cprintf("exec err\n");
+    goto bad;
+  }
   for(i=0, off=elf.phoff; i<elf.phnum; i++, off+=sizeof(ph)){
     if(readi(ip, (char*)&ph, off, sizeof(ph)) != sizeof(ph))
       goto bad;
@@ -93,9 +98,11 @@ exec(char *path, char **argv)
   proc->tf->esp = sp;
   switchuvm(proc);
   freevm(oldpgdir);
+  cprintf("exec no err\n");
   return 0;
 
  bad:
+  cprintf("exec bad\n");
   if(pgdir)
     freevm(pgdir);
   if(ip)

@@ -101,6 +101,7 @@ found:
     void
 userinit(void)
 {
+    cprintf("userinit called\n");
     struct proc *p;
     extern char _binary_initcode_start[], _binary_initcode_size[];
 
@@ -123,6 +124,7 @@ userinit(void)
     p->cwd = namei("/");
 
     p->state = RUNNABLE;
+    cprintf("userinit no err\n");
 }
 
 // Grow current process's memory by n bytes.
@@ -130,6 +132,7 @@ userinit(void)
     int
 growproc(int n)
 {
+    cprintf("growproc called\n");
     uint sz;
 
     sz = proc->sz;
@@ -142,6 +145,7 @@ growproc(int n)
     }
     proc->sz = sz;
     switchuvm(proc);
+    cprintf("growproc return 0\n");
     return 0;
 }
 
@@ -181,6 +185,7 @@ fork(void)
     pid = np->pid;
     np->state = RUNNABLE;
     safestrcpy(np->name, proc->name, sizeof(proc->name));
+    cprintf("fork no ERR\n");
     return pid;
 
 }

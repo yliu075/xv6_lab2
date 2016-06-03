@@ -68,6 +68,8 @@ int random(int max){
 
 ////////////////////////////////////////////////////////
 void thread_yield2(){
+    printf(1,"My PID: %d \n", proc->pid);
+    /*
     int tid2 = proc->pid;
     printf(1,"thQ2 Size1 %d PID: %d \n", thQ2->size, tid2);
     add_q(thQ2, tid2);
@@ -78,5 +80,9 @@ void thread_yield2(){
     tsleep();
     twakeup(tidNext);
     thread_yield3(tidNext);
+    */
+    //add_q(thQ2, tid2);
+    //proc->state = RUNNABLE;
+    
     //yield();
 }
