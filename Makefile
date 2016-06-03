@@ -182,6 +182,7 @@ UPROGS=\
 	_test_yield\
 	_ty\
 	_null_ptr_test\
+	_null_ptr_test2\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -251,7 +252,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
-	printf.c umalloc.c test1.c test.c test_sleep.c frisbee.c null_ptr_test.c\
+	printf.c umalloc.c test1.c test.c test_sleep.c frisbee.c null_ptr_test.c null_ptr_test2.c\
 	test_q.c test_random.c teset_yield.c ty.c queue.c umalloc.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\

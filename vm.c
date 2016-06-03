@@ -70,6 +70,7 @@ walkpgdir(pde_t *pgdir, const void *va, int alloc)
 static int
 mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
 {
+  //cprintf("mappages starting\n");
   char *a, *last;
   pte_t *pte;
   
@@ -86,6 +87,7 @@ mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
     a += PGSIZE;
     pa += PGSIZE;
   }
+  //cprintf("mappages no ERR\n");
   return 0;
 }
 
@@ -309,7 +311,7 @@ clearpteu(pde_t *pgdir, char *uva)
 pde_t*
 copyuvm(pde_t *pgdir, uint sz)
 {
-  cprintf("copyuvm starts\n");
+  //cprintf("copyuvm starts\n");
   pde_t *d;
   pte_t *pte;
   uint pa, i, flags;
