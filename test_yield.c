@@ -1,20 +1,6 @@
 #include "types.h"
 #include "user.h"
 
-struct thread{
-    int tid;
-};
-
-struct{
-    lock_t lock;
-    struct thread threads[64];
-    int total;
-}ttable;
-
-int n = 1;
-
-
-void test_func(void *arg_ptr);
 void ping(void *arg_ptr);
 void pong(void *arg_ptr);
 
@@ -49,16 +35,8 @@ int main(int argc, char *argv[]){
     exit();
 }
 
-void test_func(void *arg_ptr){
-//    printf(1,"\n n = %d\n",n);
-    n++;
-   // printf(1,"after increase by 1 , n = %d\n\n",n);
-    texit();
-}
 
 void ping(void *arg_ptr){
-    int * num = (int *)arg_ptr;
-    n = *num; 
     int i = 0;
     for (; i < 15 ; i++) {
     // while(1) {
@@ -70,8 +48,6 @@ void ping(void *arg_ptr){
     texit();
 }
 void pong(void *arg_ptr){
-    int * num = (int *)arg_ptr;
-    n = *num; 
     int i = 0;
     for (; i < 15 ; i++) {
     // while(1) {

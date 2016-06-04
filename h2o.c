@@ -17,17 +17,19 @@ int main(int argc, char *argv[]){
     sema_init(h);
     //sema_init(h2);
     sema_init(o);
-    h->count = 1;
-    o->count = 1;
+    printf(1,"H Count: %d\n", h->count);
+    printf(1,"O Count: %d\n", o->count);
     thread_create(hReady, (void *)&water_molecules);
     thread_create(hReady, (void *)&water_molecules);
     thread_create(oReady, (void *)&water_molecules);
+    printf(1,"H Count: %d\n", h->count);
+    printf(1,"O Count: %d\n", o->count);
     while(wait() >= 0){}
     //wait();
-    //printf(1,"Waited 1\n");
+    printf(1,"Waited 1\n");
     //thread_yield_last();
     //wait();
-    //printf(1,"Waited 2\n");
+    printf(1,"Waited 2\n");
     //thread_yield_last();
     //wait();
     //printf(1,"Waited 3\n");
@@ -60,23 +62,19 @@ void pong(void *arg_ptr){
 }
 
 void hReady(void *water) {
-    //printf(1, "Added H\n");
+    printf(1, "Added H\n");
     sema_signal(h);
     sema_acquire(o);
-    //printf(1, "Exit H\n");
+    printf(1, "Exit H\n");
     texit();
 }
 
 void oReady(void *water) {
-    //printf(1, "Added O\n");
+    printf(1, "Added O\n");
     sema_acquire(h);
-    //printf(1, "After H1\n");
     sema_acquire(h);
-    //printf(1, "After H2\n");
-    sema_signal(o);
     sema_signal(o);
     water_molecules++;
-    printf(1, "H2O\n");
-    //printf(1, "Exit O\n");
+    printf(1, "Exit O\n");
     texit();
 }

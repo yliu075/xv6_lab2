@@ -5,7 +5,7 @@
 struct semaphore {
   /*uint val = 0;
   uint locked = 0;*/
-  lock_t lock;
+  //lock_t lock;
   int count;
   struct queue q;
 };

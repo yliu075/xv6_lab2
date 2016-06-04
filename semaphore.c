@@ -13,7 +13,7 @@
 void sema_init(struct semaphore *s) {
   /*s->val = newVal;
   s->locked = 0;*/
-  lock_init(&s->lock);
+  //lock_init(&s->lock);
   s->count = 0;
   init_q(&s->q);
 }
@@ -26,27 +26,33 @@ void sema_acquire(struct semaphore *s) {
     }
     xchg(&s->locked, 0);
   }*/
-  lock_acquire(&(s->lock));
+  //lock_acquire(&(s->lock));
   if(s->count <= 0){
       add_q(&(s->q),getpid());
-      lock_release(&s->lock);
-      tsleep();
+      while((s->count == 0) ) wait();
+      pop_q(&(s->q));
+      //lock_release(&s->lock);
+      //tsleep();
   }else{
       s->count--;
-      lock_release(&s->lock);
+      //lock_release(&s->lock);
   }
 }
 void sema_signal(struct semaphore *s) {
   /*while(xchg(&s->locked, 1) ! = 0);
   s->val++;
-
+  
   xchg(&s->locked, 0);*/
-  lock_acquire(&s->lock);
+  //printf(1,"sema sig called Count: %d\n", s->count);
+  s->count++;
+  //lock_acquire(&s->lock);
+  /*
   if(empty_q(&s->q)){
       s->count++;
   }else{
-      int tid = pop_q(&s->q);
-      twakeup(tid);
+      //int tid = pop_q(&s->q);
+      //twakeup(tid);
   }
-  lock_release(&s->lock);
+  //lock_release(&s->lock);
+  */
 }
