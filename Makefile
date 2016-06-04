@@ -185,14 +185,16 @@ UPROGS=\
 	_null_ptr_test2\
 	_test_h2o\
 	_th\
-	_h2o\
+	_tm\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
 
 -include *.d
 
-#clean: 
+clean: 
+	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg *.o *.d *.asm *.sym\
+	$(UPROGS)
 	#rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
 	#*.o *.d *.asm *.sym vectors.S bootblock entryother \
 	#initcode initcode.out kernel xv6.img fs.img kernelmemfs mkfs \
@@ -256,7 +258,7 @@ EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
 	printf.c umalloc.c test1.c test.c test_sleep.c frisbee.c null_ptr_test.c null_ptr_test2.c\
-	test_q.c test_random.c teset_yield.c ty.c queue.c umalloc.c test_h2o.c th.c h2o.c\
+	test_q.c test_random.c teset_yield.c ty.c queue.c umalloc.c test_h2o.c th.c tm.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 
