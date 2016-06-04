@@ -26,25 +26,25 @@ int main(int argc, char *argv[]){
     //thread_create(pong, (void *)&arg);
     
     void *tid = thread_create(ping, (void *)&arg);
-    printf(1,"Thread Created 1\n");
+    //printf(1,"Thread Created 1\n");
     if(tid <= 0){
         printf(1,"wrong happen\n");
         exit();
     } 
     tid = thread_create(pong, (void *)&arg);
-    printf(1,"Thread Created 2\n");
+    //printf(1,"Thread Created 2\n");
     if(tid <= 0){
         printf(1,"wrong happen\n");
         exit();
     } 
     
     
-    printf(1,"Going to Wait\n");
+    //printf(1,"Going to Wait\n");
     wait();
-    printf(1,"Waited 1\n");
+    //printf(1,"Waited 1st Thread\n");
     thread_yield_last();
     wait();
-    printf(1,"Waited 2\n");
+    //printf(1,"Waited 2nd Thread\n");
     
     exit();
 }

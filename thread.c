@@ -42,7 +42,7 @@ void *thread_create(void(*start_routine)(void*), void *arg){
     }
 
     tid = clone((uint)stack,PSIZE,(uint)start_routine,(int)arg);
-    printf(1,"clone returned tid = %d\n",tid);
+    //printf(1,"clone returned tid = %d\n",tid);
     if(tid < 0){
         printf(1,"clone fails\n");
         return 0;

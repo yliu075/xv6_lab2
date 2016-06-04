@@ -1,5 +1,6 @@
 #include "types.h"
 #include "user.h"
+#include "semaphore.c"
 
 struct thread{
     int tid;
@@ -13,6 +14,7 @@ struct{
 
 int n = 1;
 
+struct semaphore *h;
 
 void test_func(void *arg_ptr);
 void ping(void *arg_ptr);
@@ -21,30 +23,30 @@ void pong(void *arg_ptr);
 int main(int argc, char *argv[]){
 
     int arg = 10;
-    
+    sema_init(h);
     //thread_create(ping, (void *)&arg);
     //thread_create(pong, (void *)&arg);
     
     void *tid = thread_create(ping, (void *)&arg);
-    //printf(1,"Thread Created 1\n");
+    printf(1,"Thread Created 1\n");
     if(tid <= 0){
         printf(1,"wrong happen\n");
         exit();
     } 
     tid = thread_create(pong, (void *)&arg);
-    //printf(1,"Thread Created 2\n");
+    printf(1,"Thread Created 2\n");
     if(tid <= 0){
         printf(1,"wrong happen\n");
         exit();
     } 
     
     
-    //printf(1,"Going to Wait\n");
+    printf(1,"Going to Wait\n");
     wait();
-    //printf(1,"Waited 1st Thread\n");
+    printf(1,"Waited 1\n");
     thread_yield_last();
     wait();
-    //printf(1,"Waited 2nd Thread\n");
+    printf(1,"Waited 2\n");
     
     exit();
 }

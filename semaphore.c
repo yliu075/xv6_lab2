@@ -1,22 +1,23 @@
-#include "types.h"
-#include "defs.h"
-#include "param.h"
-#include "x86.h"
-#include "memlayout.h"
-#include "mmu.h"
-#include "proc.h"
+//#include "types.h"
+//#include "defs.h"
+//#include "param.h"
+//#include "x86.h"
+//#include "memlayout.h"
+//#include "mmu.h"
+//#include "proc.h"
+
 //#include "user.h"
 #include "semaphore.h"
 
 //void sem_init(struct semaphore *s, uint newVal) {
-void sem_init(struct semaphore *s) {
+void sema_init(struct semaphore *s) {
   /*s->val = newVal;
   s->locked = 0;*/
   lock_init(&s->lock);
   s->count = 0;
   init_q(&s->q);
 }
-void sem_acquire(struct semaphore *s) {
+void sema_acquire(struct semaphore *s) {
   /*while(1) {
     while(xchg(&s->locked, 1) != 0);
     if (s->val > 0) {
@@ -35,7 +36,7 @@ void sem_acquire(struct semaphore *s) {
       lock_release(&s->lock);
   }
 }
-void sem_signal(struct semaphore *s) {
+void sema_signal(struct semaphore *s) {
   /*while(xchg(&s->locked, 1) ! = 0);
   s->val++;
 
