@@ -31,6 +31,7 @@ void yield(void);
 void thread_yield(void);
 void thread_yield2(void);
 void thread_yield3(int);
+void thread_yield_last(void);
 
 // ulib.c
 int stat(char*, struct stat*);

@@ -42,6 +42,7 @@ void *thread_create(void(*start_routine)(void*), void *arg){
     }
 
     tid = clone((uint)stack,PSIZE,(uint)start_routine,(int)arg);
+    printf(1,"clone returned tid = %d\n",tid);
     if(tid < 0){
         printf(1,"clone fails\n");
         return 0;
@@ -68,21 +69,32 @@ int random(int max){
 
 ////////////////////////////////////////////////////////
 void thread_yield2(){
-    printf(1,"My PID: %d \n", proc->pid);
-    /*
-    int tid2 = proc->pid;
-    printf(1,"thQ2 Size1 %d PID: %d \n", thQ2->size, tid2);
+    static int popp = 0;
+    
+
+    int tid2 = getpid();
+    //printf(1,"thQ2 Size1 %d PID: %d \n", thQ2->size, tid2);
     add_q(thQ2, tid2);
-    printf(1,"thQ2 Size2 %d \n", thQ2->size);
+    //printf(1,"thQ2 Size2 %d \n", thQ2->size);
     int tidNext = pop_q(thQ2);
-    while (tid2 == tidNext) tidNext = pop_q(thQ2);
-    printf(1,"thQ2 Size3 %d TID: %d \n", thQ2->size, tidNext);
-    tsleep();
+    if (popp == 0) {
+        tidNext = pop_q(thQ2);
+        popp++;
+    }
+    while ((tid2 == tidNext) || (tidNext == 0)) tidNext = pop_q(thQ2);
+    //printf(1,"thQ2 Size3 %d TID: %d \n", thQ2->size, tidNext);
+    //if ()
     twakeup(tidNext);
-    thread_yield3(tidNext);
-    */
+    tsleep();
+    //printf(1,"thQ2 Size4 %d PID: %d \n", thQ2->size, getpid());
+    //thread_yield3(tidNext);
+    
     //add_q(thQ2, tid2);
     //proc->state = RUNNABLE;
-    
-    //yield();
+    //thread_yield3(0);
+}
+
+void thread_yield_last(){
+    int tidNext = pop_q(thQ2);
+    twakeup(tidNext);
 }

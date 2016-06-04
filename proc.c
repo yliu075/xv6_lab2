@@ -489,7 +489,7 @@ scheduler(void)
     for(;;){
         // Enable interrupts on this processor.
         sti();
-
+        //cprintf("scheduler Next PROC\n");
         // Loop over process table looking for process to run.
         acquire(&ptable.lock);
         for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
@@ -804,7 +804,32 @@ void thread_yield(void){
     
 }
 
+    void
+tsched(void)
+{
+    int intena;
+
+    if(!holding(&ptable.lock))
+        panic("tsched ptable.lock");
+    if(cpu->ncli != 1){
+        cprintf("current proc %d\n cpu->ncli %d\n",proc->pid,cpu->ncli);
+        panic("sched locks");
+    }
+    if(proc->state == RUNNING)
+        panic("tsched running");
+    if(readeflags()&FL_IF)
+        panic("tsched interruptible");
+    intena = cpu->intena;
+    swtch(&proc->context, cpu->scheduler);
+    cpu->intena = intena;
+}
+
 void thread_yield3(int tid) {
+    /*
+    acquire(&ptable.lock);
+    proc->state = RUNNABLE;
+    release(&ptable.lock);
+    */
     /*
     acquire(&ptable.lock);
     struct proc *p;
