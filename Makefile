@@ -54,7 +54,7 @@ TOOLPREFIX := $(shell if i386-jos-elf-objdump -i 2>&1 | grep '^elf32-i386$$' >/d
 endif
 
 # If the makefile can't find QEMU, specify its path here
-QEMU = qemu-system-i386
+#QEMU = qemu-system-i386
 
 # Try to infer the correct QEMU
 ifndef QEMU
@@ -158,6 +158,8 @@ mkfs: mkfs.c fs.h
 .PRECIOUS: %.o
 
 UPROGS=\
+	_cat\
+	_echo\
 	_forktest\
 	_grep\
 	_init\
@@ -252,7 +254,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 # check in that version.
 
 EXTRA=\
-	mkfs.c ulib.c user.h forktest.c grep.c kill.c\
+	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
 	printf.c umalloc.c test1.c test.c test_sleep.c frisbee.c null_ptr_test.c null_ptr_test2.c\
 	test_q.c test_random.c ty.c queue.c umalloc.c th.c tm.c tc.c\
