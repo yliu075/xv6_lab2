@@ -158,7 +158,6 @@ mkfs: mkfs.c fs.h
 .PRECIOUS: %.o
 
 UPROGS=\
-	_cat\
 	_echo\
 	_forktest\
 	_grep\
@@ -179,13 +178,12 @@ UPROGS=\
 	_test_sleep\
 	_wc\
 	_zombie\
-	_test_yield\
 	_ty\
 	_null_ptr_test\
 	_null_ptr_test2\
-	_test_h2o\
 	_th\
 	_tm\
+	_tc\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -255,10 +253,10 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 # check in that version.
 
 EXTRA=\
-	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
+	mkfs.c ulib.c user.h echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
 	printf.c umalloc.c test1.c test.c test_sleep.c frisbee.c null_ptr_test.c null_ptr_test2.c\
-	test_q.c test_random.c teset_yield.c ty.c queue.c umalloc.c test_h2o.c th.c tm.c\
+	test_q.c test_random.c ty.c queue.c umalloc.c th.c tm.c tc.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 
