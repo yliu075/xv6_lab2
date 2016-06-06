@@ -158,7 +158,6 @@ mkfs: mkfs.c fs.h
 .PRECIOUS: %.o
 
 UPROGS=\
-	_echo\
 	_forktest\
 	_grep\
 	_init\
@@ -253,7 +252,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 # check in that version.
 
 EXTRA=\
-	mkfs.c ulib.c user.h echo.c forktest.c grep.c kill.c\
+	mkfs.c ulib.c user.h forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
 	printf.c umalloc.c test1.c test.c test_sleep.c frisbee.c null_ptr_test.c null_ptr_test2.c\
 	test_q.c test_random.c ty.c queue.c umalloc.c th.c tm.c tc.c\
